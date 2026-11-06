@@ -1,57 +1,86 @@
-# Breather mobile (Android)
+Breather Mobile (Android)
 
-Expo SDK 58, React Native 0.88, TypeScript. Android is the target. No paid cloud builds, no iOS/macOS needed.
+Android app for Breather, a tool that helps students and professors see and reduce assessment crunch (weeks where many assessments overlap).
 
-**New to this? Read `docs/BEGINNER-GUIDE.md` first.**
+Built with Expo SDK 58, React Native 0.88 and TypeScript. Android is the target platform.
 
-## Quick commands
-```
+1. What was built
+Students
+Screen	What it does
+Home	Next assessment, number of assessments, and what is coming up
+Courses	The student's courses with crunch level
+Register	The student's assessments
+Official dates	Own official dates from Canvas. Read-only, marked "Unchanged since import"
+Professors
+Screen	What it does
+Home	Number of pending suggestions and the busiest week
+Teaching	Courses and preparation items, with data source, coverage and review status
+Workload	Busiest weeks as bars, in words, and in a table (screen-reader friendly)
+Suggestions	Before/after comparison (same input version only), then Accept, Reject or Lock with a confirmation step
+History	A record of every decision
+
+Accepting a suggestion is saved as "Approved locally; not published". It never changes Canvas.
+
+Both roles
+Login through the browser, so the app never sees a Canvas password.
+Settings
+Account: profile and log out
+About: what Breather does and does not do
+Testing: an on-device acceptance checklist and "Share evidence text"
+Clear failure messages for no internet, expired or revoked sessions, stale or incomplete data, and failed decisions. A failure never looks like success, and missing data shows "Not available" instead of 0.
+
+2. 📈 Project status
+Item	Status
+Typecheck	✅ Passing
+Android bundle	✅ Builds
+Demo on a phone (Expo Go)	✅ : https://drive.google.com/file/d/1rYLqpW51-Mjx14MrkP85M3jV5HDKLByp/view?usp=drive_link
+
+APK	✅ Built with EAS (free tier)
+Real backend (C1/C2 contracts)	⏳ Not connected yet
+TalkBack, large-text and two-device checks	⏳ To be recorded in docs/EVIDENCE-M2.md
+iOS	➖ Not attempted
+
+4. How to run and review it
+
+Requirements: Node.js (LTS) on your computer, and the Expo Go app on an Android phone. The phone and computer must be on the same Wi-Fi.
+
+bash
 npm ci
+npm start
+Scan the QR code with Expo Go.
+Tap Continue as professor (fixture) or Continue as student (fixture).
+Suggested review path
+Professor: Workload, then "Compare before and after" on both suggestions (the second is refused because its inputs differ), then Accept one and confirm. Check History.
+Student: Official dates. They are read-only and unchanged.
+Failures: Settings, then Testing, then switch the screen state to network, expired, forbidden or stale. expired signs you out.
+
+Checks without the app
+bash
 npm run typecheck
 npm test -- --runInBand
 npx expo-doctor
-npm run android            # build + run on emulator/device (debug)
-npm run android:device-info
-npm run android:install    # local release APK + SHA-256 + adb install
-```
+Other commands
+bash
+npm run android              # build and run on emulator or device (debug)
+npm run android:device-info  # record device details
+npm run android:install      # local release APK + SHA-256 + adb install
+Acceptance run (Windows PowerShell)
+powershell
+powershell -ExecutionPolicy Bypass -File scripts\accept.ps1
 
-## Layout
-```
-App.tsx                      app entry (fonts, providers, navigation)
-src/theme/branding.ts        colors, type, spacing (from the brand booklet)
-src/components/              Button, Card, CrunchChip, StateView, Banner, ...
-src/screens/                 Login, Courses, Register (assessments), Session
-src/navigation/              signed-out -> Login; signed-in -> tabs
-src/auth/handoff.ts          state/replay/expiry/cancel logic (unit-tested)
-src/auth/session.ts          token exchange, profile fetch, revoke
-src/auth/secureStorage.ts    Android Keystore via expo-secure-store
-src/fixtures/c0.ts           LABELLED fixture data (assumed C0 shapes)
-docs/                        guides + evidence templates (excluded from build/typecheck/tests)
-```
+Runs expo-doctor, typecheck and tests, and saves the real output, git info, device model and APK hash to docs/evidence-run/.
 
-## Security rules built in
-- App only talks to the Breather backend. No Canvas URL, secret, or credential in the app.
-- Only an opaque session token + expiry is stored (Android Keystore). No role is stored or trusted.
-- Role/profile is fetched from the backend each session and kept in memory.
-- Handoff `state` is single-use, expires in 5 minutes, and replays are rejected.
-- Official assessment dates are shown read-only; the app never writes to Canvas.
+4. Documentation
+File	Purpose
+docs/BEGINNER-GUIDE.md	Setup from zero
+docs/M1-FIXTURE-SCENARIO.md	Fixture walkthrough for the professor and student journeys
+docs/EVIDENCE-M1.md	M1 evidence
+docs/EVIDENCE-M2.md	M2 evidence. Fill with real results only
+docs/APK-BUILD.md	How to produce an installable APK
+docs/DEMO-SCRIPT.md	Demo script
+docs/GITHUB-GUIDE.md	Git and pull request steps
+docs/TEAM-SHOWCASE.md	What to share with teammates
 
-## Fixture mode
-`EXPO_PUBLIC_USE_FIXTURES=1` (default) shows labelled fixture data and a local fake sign-in (memory only).
-Set `0` for the real backend. In real mode, data screens show an explicit "not wired yet" error until the released C0/C1 endpoints are connected. They never show invented data as if it were real.
-
-## Known placeholders (replace when C0 is released)
-- `ENDPOINTS` in `src/config.ts`
-- `Profile` in `src/auth/session.ts`
-- Types and fixtures in `src/fixtures/c0.ts`
-- Lint is not configured yet (typecheck + tests are).
-
-## M1 (professor journey + student official dates)
-See docs/M1-FIXTURE-SCENARIO.md and docs/EVIDENCE-M1.md. Contract-ready/mock-ready only.
-
-## M2 (acceptance and install evidence)
-- docs/EVIDENCE-M2.md: fill with REAL results
-- docs/APK-BUILD.md: how to get an installable APK
-- scripts/accept.ps1: runs the commands and saves real output
-- docs/DEMO-SCRIPT.md, docs/GITHUB-GUIDE.md, docs/TEAM-SHOWCASE.md
-- In the app: Settings > Testing has the on-device checklist and "Share evidence text"
+5. Dependencies and next steps
+Needed from the backend team: the backend URL, the contract revision, and test student and professor accounts.
+Pending: run the journey against the real backend, record TalkBack and text-scaling checks, run the cross-device and duplicate-decision tests, and fill in docs/EVIDENCE-M2.md.
