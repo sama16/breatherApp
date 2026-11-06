@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Breather",
+    "slug": "breather-mobile",
+    "scheme": "breather",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#111111",
+    "icon": "./assets/icon.png",
+    "plugins": [
+      "expo-secure-store",
+      "expo-font"
+    ],
+    "android": {
+      "package": "org.breatherapp.mobile",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#111111",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3210d486-a50d-4230-bd2c-414a731a5880"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "org.breatherapp.mobile"
+    }
+  }
+}
