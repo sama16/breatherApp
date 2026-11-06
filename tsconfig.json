@@ -2,8 +2,20 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "types": ["jest"]
+    "types": [
+      "jest"
+    ]
   },
-  "include": ["App.tsx", "index.ts", "src/**/*", "expo-env.d.ts"],
-  "exclude": ["node_modules", "docs/**", "android", "ios", "dist"]
+  "include": [
+    "App.tsx",
+    "index.ts",
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "docs/**",
+    "android",
+    "ios",
+    "dist"
+  ]
 }
